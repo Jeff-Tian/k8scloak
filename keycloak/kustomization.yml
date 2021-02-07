@@ -1,0 +1,6 @@
+bases: []
+resources:
+  - deployment.yml
+  - secrets.yml
+  - service.yml
+#  - pvc.yml

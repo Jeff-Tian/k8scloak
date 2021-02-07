@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unilock
+spec:
+  selector:
+    matchLabels:
+      app: unilock
+  replicas: 1
+  revisionHistoryLimit: 10
+  template:
+    metadata:
+      labels:
+        app: unilock
+    spec:
+      containers:
+        - name: unilock
+          image: jboss/keycloak
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 500m
+              memory: 2048Mi
+            limits:
+              cpu: 500m
+              memory: 2048Mi
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: unilock-pass

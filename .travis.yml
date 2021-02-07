@@ -1,0 +1,21 @@
+language: node_js
+node_js:
+  - 11.10.0
+install:
+  - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+  - chmod +x ./kubectl
+  - sudo mv ./kubectl /usr/local/bin/kubectl
+  - mkdir ${HOME}/.kube
+  - npm i -g k8ss
+  - echo -e "machine github.com\n  login $GH_TOKEN" > ~/.netrc
+  - git clone https://github.com/Jeff-Tian/k8s-config.git ${HOME}/k8s-config
+env:
+  ci: true
+script:
+  - echo "will start deploying..."
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: k8ss switch --cluster=okteto --namespace=jeff-tian&&kubectl apply -k k8s/keycloak&&kubectl rollout restart deploy unilock
+    on:
+      branch: main
